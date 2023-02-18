@@ -23,7 +23,7 @@ def main():
     accioCounter = 0
     
     # f-string to print hostname and port supplied
-    print(f"Connecting to {hostname}:{port} ...")
+    #print(f"Connecting to {hostname}:{port} ...")
 
     # creating new socket using socket method
     # socket.AF_INET for the address and protocol family for IPv4
