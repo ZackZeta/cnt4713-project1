@@ -39,7 +39,12 @@ def main():
         # connecting created socket to hostname and port
         sock.connect((hostname, port))
         # set socket timeout to 10 seconds
-        sock.settimeout(11)
+        sock.settimeout(10)
+    # Catch a socket timeout error
+    except socket.timeout:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write("ERROR: Connection timed out\n")
+        sys.exit(1)
     # Catch a socket error
     except socket.error as e:
         # Print error message and exit with non-zero exit code
@@ -50,11 +55,7 @@ def main():
         # Print error message and exit with non-zero exit code
         sys.stderr.write(f'ERROR: {o}\n')
         sys.exit(2)
-    # Catch a socket timeout error
-    except socket.timeout:
-        # Print error message and exit with non-zero exit code
-        sys.stderr.write("ERROR: Connection timed out\n")
-        sys.exit(1)
+
     
     # Receive initial command from server
     try:
