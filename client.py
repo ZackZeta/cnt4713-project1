@@ -1,12 +1,8 @@
-#/usr/bin/env python3
-
 import sys
 
 #importing socket
 import socket
-
-#if __name__ == '__main__':
-#    sys.stderr.write("server is not implemented yet\n")
+print("client is running")
 
 #creating new socket using socket method
 #socket.AF_INET for the address and protocol family for IPv4
@@ -14,8 +10,10 @@ import socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print(sock)
 
-sock.bind(("localhost", 12345))
-print(sock)
+sock.connect(("127.0.0.1", 12345))
 
-socket.listen(1)
-clientSocket, ClientAddress = sock.accept()
+l = sock.send(b"foobar\r\n")
+print("send bytes", l)
+
+b = sock.recv(1024)
+print("Received: '%s" % b)
