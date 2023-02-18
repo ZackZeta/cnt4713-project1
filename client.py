@@ -38,6 +38,8 @@ def main():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connecting created socket to hostname and port
         sock.connect((hostname, port))
+        # set socket timeout to 10 seconds
+        sock.settimeout(10)
     # Catch a socket error
     except socket.error as e:
         # Print error message and exit with non-zero exit code
@@ -48,9 +50,23 @@ def main():
         # Print error message and exit with non-zero exit code
         sys.stderr.write(f'ERROR: {o}\n')
         sys.exit(2)
+    # Catch a socket timeout error
+    except socket.timeout:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write("ERROR: Connection timed out\n")
+        sys.exit(1)
     
     # Receive initial command from server
-    severReceiving = sock.recv(1024)
+    try:
+        severReceiving = sock.recv(1024)
+    except socket.timeout:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write("ERROR: Timed out waiting for initial command from server\n")
+        sys.exit(1)
+    except socket.error as e:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write(f'ERROR: {e}\n')
+        sys.exit(1)
     # Checking if the data received is accio\r\n
     if severReceiving == b"accio\r\n":
         # increase accioCounter when data received is accio\r\n
@@ -59,18 +75,34 @@ def main():
         # else print message and exit if it did not
         print("Did not receive 'accio\r\n' from the server")
         sys.exit(1)
+   
+   
+   
+   
         
-    # Receive initial command from server
-    severReceiving = sock.recv(1024)
-    # Repeating checking if the data received is accio\r\n
+    # Receive second command from server
+    try:
+        severReceiving = sock.recv(1024)
+    except socket.timeout:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write("ERROR: Timed out waiting for second command from server\n")
+        sys.exit(1)
+    except socket.error as e:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write(f'ERROR: {e}\n')
+        sys.exit(1)
+    # Checking if the data received is accio\r\n
     if severReceiving == b"accio\r\n":
         # increase accioCounter when data received is accio\r\n
-        accioCounter = accioCounter + 1
+        accioCounter = accioCounter + 1        
     else:
         # else print message and exit if it did not
-        print("Did not receive 'accio\r\n' again from the server")
+        print("Did not receive 'accio\r\n' from the server")
         sys.exit(1)
 
+
+
+    # Checking if 2 accio commands have been received 
     if accioCounter != 2:
         print("Error: Did not receive two 'accio' commands")
         sys.exit(1) 
