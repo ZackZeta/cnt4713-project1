@@ -18,6 +18,7 @@ part 1:
 -taskkill /F /PID <PID> (to terminate the process)
 4.VSC running two programs at once was not always working.
 5.Find a way to send data in binary to the server
+6.argv is not working going to try to use argparse
 ## Acknowledgements 
 
 Part 1:

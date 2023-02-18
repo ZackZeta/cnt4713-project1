@@ -2,6 +2,8 @@
 import sys
 # importing socket
 import socket
+# importing argparse
+import argparse
 
 #print("client is running")
 
@@ -12,13 +14,17 @@ def main():
         print("Usage: python3 client.py <HOSTNAME-OR-IP> <PORT> <FILENAME>")
         sys.exit(1)
 
-    # client.py[0], <HOSTNAME-OR-IP>[1], <PORT>[3], <FILENAME>[4]
-    # set argv[1] to hostname which should be <HOSTNAME-OR-IP>  
-    hostname = sys.argv[1]
-    # set argv[2] to port which should be <PORT>. int() to convert string to int 
-    port = int(sys.argv[2])
-    # set argv[3] to filename which should be <FILENAME>
-    filename = sys.argv[3]
+    # Create an ArgumentParser object
+    argumentParse = argparse.ArgumentParser()
+    argumentParse.add_argument('hostname', type=str, help='<HOSTNAME-OR-IP>')
+    argumentParse.add_argument('port', type=int, help='<PORT>')
+    argumentParse.add_argument('filename', type=str, help='<FILENAME>')
+    args = argumentParse.parse_args()
+
+    # use the values of the command line arguments
+    hostname = args.hostname
+    port = args.port
+    filename = args.filename
     # Initialize counter variable
     accioCounter = 0
     
@@ -80,6 +86,7 @@ def main():
 if __name__ == "__main__":
     main()
 
+"""
 #creating new socket using socket method
 #socket.AF_INET for the address and protocol family for IPv4
 #socket.SOCK_STREAM Stream socket type, provides dual directional communication
@@ -93,4 +100,4 @@ if __name__ == "__main__":
 
 #b = sock.recv(1024)
 #print("Received: '%s" % b)
-
+"""
