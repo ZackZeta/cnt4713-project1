@@ -38,9 +38,15 @@ def main():
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connecting created socket to hostname and port
         sock.connect((hostname, port))
+    # Catch a socket error
     except socket.error as e:
         # Print error message and exit with non-zero exit code
         sys.stderr.write(f'ERROR: {e}\n')
+        sys.exit(2)
+    # Catch an overflow error
+    except OverflowError as o:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write(f'ERROR: {o}\n')
         sys.exit(2)
     
     # Receive initial command from server
