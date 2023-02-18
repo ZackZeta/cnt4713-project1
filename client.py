@@ -45,6 +45,10 @@ def main():
         # Print error message and exit with non-zero exit code
         sys.stderr.write(f"ERROR: Connection timed out: {exc}\n")
         sys.exit(1)
+    except ConnectionRefusedError as e:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write(f'ERROR: {e}\n')
+        sys.exit(2)
     # Catch a socket error
     except socket.error as e:
         # Print error message and exit with non-zero exit code
@@ -114,7 +118,7 @@ def main():
         sock.send(b"confirm-accio-again\r\n\r\n")
 
     # with statement, to handle file stream
-    # open function to open file provide in argv
+    # open function to open file provided in args
     # rb to read in binary file
     with open(filename, "rb") as file:
         # read first 1024 bytes of the file and store it in data
