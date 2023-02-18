@@ -43,11 +43,11 @@ def main():
     # Catch a socket timeout error
     except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
-        sys.stderr.write(f"ERROR: Connection timed out: {exc}\n")
+        sys.stderr.write(f"ERROR: () Connection timed out: {exc}\n")
         sys.exit(1)
     except ConnectionRefusedError as e:
         # Print error message and exit with non-zero exit code
-        sys.stderr.write(f'ERROR: {e}\n')
+        sys.stderr.write(f'ERROR: () {e}\n')
         sys.exit(2)
     # Catch a socket error
     except socket.error as e:
@@ -64,13 +64,9 @@ def main():
     # Receive initial command from server
     try:
         severReceiving = sock.recv(1024)
-    except socket.timeout:
-        # Print error message and exit with non-zero exit code
-        sys.stderr.write("ERROR: Timed out waiting for initial command from server\n")
-        sys.exit(1)
     except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
-        sys.stderr.write(f"ERROR: Connection timed out: {exc}\n")
+        sys.stderr.write(f"ERROR: () Connection timed out: {exc}\n")
         sys.exit(1)
     # Checking if the data received is accio\r\n
     if severReceiving == b"accio\r\n":
@@ -90,7 +86,7 @@ def main():
         severReceiving = sock.recv(1024)
     except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
-        sys.stderr.write(f"ERROR: Connection timed out: {exc}\n")
+        sys.stderr.write(f"ERROR: () Connection timed out: {exc}\n")
         sys.exit(1)
     except socket.error as e:
         # Print error message and exit with non-zero exit code
