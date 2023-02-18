@@ -39,7 +39,7 @@ def main():
         # connecting created socket to hostname and port
         sock.connect((hostname, port))
         # set socket timeout to 10 seconds
-        sock.settimeout(10)
+        sock.settimeout(11)
     # Catch a socket error
     except socket.error as e:
         # Print error message and exit with non-zero exit code
