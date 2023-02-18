@@ -25,4 +25,8 @@ Course Material was mainly following was used to expand and reinforced what was 
 
 freeCodeCamp.org. (2018). Learn Python - Full Course for Beginners [Tutorial]. YouTube. from https://www.youtube.com/watch?v=rfscVS0vtbw&amp;t=4793s&amp;ab_channel=freeCodeCamp.org.
 
-Tech With Tim. (2020). Python Socket Programming Tutorial. YouTube. from https://www.youtube.com/watch?v=3QiPPX-KeSc&amp;ab_channel=TechWithTim. 
+Tech With Tim. (2020). Python Socket Programming Tutorial. YouTube. from https://www.youtube.com/watch?v=3QiPPX-KeSc&amp;ab_channel=TechWithTim.
+
+GeeksforGeeks. (2022, November 18). With statement in Python. GeeksforGeeks. from https://www.geeksforgeeks.org/with-statement-in-python/
+
+Python - read and write files. Python - Read and Write Files. (n.d.). from https://www.tutorialsteacher.com/python/python-read-write-file 
