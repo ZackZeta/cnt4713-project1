@@ -1,20 +1,21 @@
 # CNT-4731 Project 1
 
-Template for for FIU CNT-4731 Project 1
-
-## Academic Integrity Note
-
-You are encouraged to host your code in private repositories on [GitHub](https://github.com/), [GitLab](https://gitlab.com), or other places.  At the same time, you are PROHIBITED to make your code for the class project public during the class or any time after the class.  If you do so, you will be violating academic honestly policy that you have signed, as well as the student code of conduct and be subject to serious sanctions.
+Project 1 FIU CNT-4731 Project 1
 
 ## Provided Files
 
 `client.py`, `server-s.py`, and  `server.py` are the entry points for the client, simplified server, and server parts of the project.
 
 ## TODO
-update
 
-    ###########################################################
-    ##                                                       ##
-    ## REPLACE CONTENT OF THIS FILE WITH YOUR PROJECT REPORT ##
-    ##                                                       ##
-    ###########################################################
+
+## Problems
+
+## Acknowledgement 
+
+Part 1:
+Course Material was mainly following was used to expand and reinforced what was learned.
+
+freeCodeCamp.org. (2018). Learn Python - Full Course for Beginners [Tutorial]. YouTube. from https://www.youtube.com/watch?v=rfscVS0vtbw&amp;t=4793s&amp;ab_channel=freeCodeCamp.org.
+
+Tech With Tim. (2020). Python Socket Programming Tutorial. YouTube. from https://www.youtube.com/watch?v=3QiPPX-KeSc&amp;ab_channel=TechWithTim. 
