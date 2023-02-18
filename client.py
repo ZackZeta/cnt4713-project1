@@ -3,7 +3,7 @@ import sys
 # importing socket
 import socket
 
-print("client is running")
+#print("client is running")
 
 def main():
     # If statement checking to make sure 4 arguments are passed
