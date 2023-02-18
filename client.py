@@ -30,14 +30,19 @@ def main():
     
     # f-string to print hostname and port supplied
     #print(f"Connecting to {hostname}:{port} ...")
-
-    # creating new socket using socket method
-    # socket.AF_INET for the address and protocol family for IPv4
-    # socket.SOCK_STREAM Stream socket type, provides dual directional communication
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # connecting created socket to hostname and port
-    sock.connect((hostname, port))
-
+    
+    try:
+        # creating new socket using socket method
+        # socket.AF_INET for the address and protocol family for IPv4
+        # socket.SOCK_STREAM Stream socket type, provides dual directional communication
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # connecting created socket to hostname and port
+        sock.connect((hostname, port))
+    except socket.error as e:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write(f'ERROR: {e}\n')
+        sys.exit(2)
+    
     # Receive initial command from server
     severReceiving = sock.recv(1024)
     # Checking if the data received is accio\r\n
