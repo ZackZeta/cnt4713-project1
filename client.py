@@ -4,6 +4,9 @@ import sys
 import socket
 # importing argparse
 import argparse
+# importing time
+import time
+
 
 #print("client is running")
 
@@ -123,6 +126,8 @@ def main():
         while data:
             # send data to the server
             sock.send(data)
+            # wait for 1 second before sending the next chunk of data
+            time.sleep(1)
             # read the next 1024 bytes of the file and store it in data
             data = file.read(1024)    
 
