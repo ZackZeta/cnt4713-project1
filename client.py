@@ -39,10 +39,10 @@ def main():
         # socket.AF_INET for the address and protocol family for IPv4
         # socket.SOCK_STREAM Stream socket type, provides dual directional communication
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # connecting created socket to hostname and port
-        sock.connect((hostname, port),timeout = 10)
         # set socket timeout to 10 seconds
         sock.settimeout(10)
+        # connecting created socket to hostname and port
+        sock.connect((hostname, port))
     # Catch a socket timeout error
     except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
