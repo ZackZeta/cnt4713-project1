@@ -90,7 +90,7 @@ def main():
         
     # Receive second command from server
     try:
-        severReceiving = sock.recv(1024)
+        severReceiving = sock.recv(7)
         
     except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
