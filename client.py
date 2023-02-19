@@ -42,11 +42,11 @@ def main():
         # connecting created socket to hostname and port
         sock.connect((hostname, port))
         # set socket timeout to 10 seconds
-        sock.settimeout(10)
+        sock.settimeout(30)
     # Catch a socket timeout error
     except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
-        sys.stderr.write(f"ERROR: () Connection timed out: {exc}\n")
+        sys.stderr.write(f"ERROR: () Connection timed out 1: {exc}\n")
         sys.exit(1)
     except ConnectionRefusedError as e:
         # Print error message and exit with non-zero exit code
@@ -69,7 +69,7 @@ def main():
         severReceiving = sock.recv(1024)
     except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
-        sys.stderr.write(f"ERROR: () Connection timed out: {exc}\n")
+        sys.stderr.write(f"ERROR: () Connection timed out 2: {exc}\n")
         sys.exit(1)
     # Checking if the data received is accio\r\n
     if severReceiving == b"accio\r\n":
@@ -89,7 +89,7 @@ def main():
         severReceiving = sock.recv(1024)
     except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
-        sys.stderr.write(f"ERROR: () Connection timed out: {exc}\n")
+        sys.stderr.write(f"ERROR: () Connection timed out 3: {exc}\n")
         sys.exit(1)
     except socket.error as e:
         # Print error message and exit with non-zero exit code
