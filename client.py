@@ -92,10 +92,10 @@ def main():
     try:
         severReceiving = sock.recv(7)
         
-    except socket.timeout as exc:
+    #except socket.timeout as exc:
         # Print error message and exit with non-zero exit code
-        sys.stderr.write(f"ERROR: () Connection timed out 3: {exc}\n")
-        sys.exit(1)
+        #sys.stderr.write(f"ERROR: () Connection timed out 3: {exc}\n")
+        #sys.exit(1)
         
     except socket.error as e:
         # Print error message and exit with non-zero exit code
