@@ -121,7 +121,7 @@ def main():
     # rb to read in binary file
     with open(filename, "rb") as file:
         # read first 1024 bytes of the file and store it in data
-        data = file.read(1024)
+        data = file.read(10000)
         # while theres data to read
         while data:
             # send data to the server
@@ -129,7 +129,7 @@ def main():
             # wait for 1 second before sending the next chunk of data
             time.sleep(1)
             # read the next 1024 bytes of the file and store it in data
-            data = file.read(1024)    
+            data = file.read(10000)    
 
     
 if __name__ == "__main__":
