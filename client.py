@@ -40,7 +40,7 @@ def main():
         # socket.SOCK_STREAM Stream socket type, provides dual directional communication
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connecting created socket to hostname and port
-        sock.connect((hostname, port))
+        sock.connect((hostname, port),timeout = 10)
         # set socket timeout to 10 seconds
         sock.settimeout(10)
     # Catch a socket timeout error
