@@ -72,6 +72,10 @@ def main():
     #    sys.stderr.write(f"ERROR: () Connection timed out 2: {exc}\n")
     #    sys.exit(1)
     # Checking if the data received is accio\r\n
+    except socket.error as e:
+        # Print error message and exit with non-zero exit code
+        sys.stderr.write(f'ERROR: {e}\n')
+        sys.exit(1)
     if severReceiving == b"accio\r\n":
         # increase accioCounter when data received is accio\r\n
         accioCounter = accioCounter + 1        
