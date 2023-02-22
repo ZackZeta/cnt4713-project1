@@ -20,6 +20,9 @@ part 1:
 5.Find a way to send data in binary to the server
 6.argv is not working going to try to use argparse
 7.trying to figure out how to do timeouts and modifying code 
+
+part 2:
+
 ## Acknowledgements 
 
 Part 1:

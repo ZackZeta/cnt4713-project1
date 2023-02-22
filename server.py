@@ -1,4 +1,6 @@
 import sys
+
+"""
 #importing socket
 import socket
 
@@ -30,5 +32,5 @@ print("test4")
 
 clientSocket.close()
 sock.close()
-
+"""
 
