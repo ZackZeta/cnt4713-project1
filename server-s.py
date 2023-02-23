@@ -1,11 +1,14 @@
 #/usr/bin/env python3
+
 import sys
 import socket
 import signal
 import threading
 
 def signalHandler(sig, frame):
+    global server_socket
     print("Exiting server...")
+    server_socket.close()
     sys.exit(0)
 
 def processClientConnection(conn, addr):
@@ -39,6 +42,7 @@ def processClientConnection(conn, addr):
     conn.close()
 
 def main():
+    global server_socket
     # Parse command line arguments
     if len(sys.argv) != 2:
         sys.stderr.write("ERROR: Invalid number of arguments\n")

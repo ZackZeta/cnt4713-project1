@@ -22,7 +22,8 @@ part 1:
 7.trying to figure out how to do timeouts and modifying code 
 
 part 2:
-
+1.Trying to figure out how server handles incorrect port through more than just except
+2.Cant get server to end gracefully 
 ## Acknowledgements 
 
 Part 1:
@@ -35,3 +36,5 @@ Tech With Tim. (2020). Python Socket Programming Tutorial. YouTube. from https:/
 GeeksforGeeks. (2022, November 18). With statement in Python. GeeksforGeeks. from https://www.geeksforgeeks.org/with-statement-in-python/
 
 Python - read and write files. Python - Read and Write Files. (n.d.). from https://www.tutorialsteacher.com/python/python-read-write-file 
+
+part 2:
