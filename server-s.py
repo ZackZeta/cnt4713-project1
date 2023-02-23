@@ -14,34 +14,39 @@ def signalHandler(sig, frame):
 def processClientConnection(conn, addr):
     # Send the "accio" command to the client
     conn.send(b'accio\r\n')
-    
-    # Receive the file header
-    header = b''
-    while b'\r\n\r\n' not in header:
-        data = conn.recv(1024)
-        if not data:
-            break
-        header += data
-    
-    # Process the header and get the filename and file size
-    lines = header.split(b'\r\n')
-    filename = lines[0].split(b' ')[1]
-    filesize = int(lines[1].split(b' ')[1])
-    
-    # Receive the file data and save it to a file
-    with open(filename, "wb") as f:
-        bytes_received = 0
-        while bytes_received < filesize:
-            data = conn.recv(min(1024, filesize - bytes_received))
+
+    while True:
+        # Receive the file header
+        header = b''
+        while b'\r\n\r\n' not in header:
+            data = conn.recv(1024)
             if not data:
                 break
-            f.write(data)
-            bytes_received += len(data)
-    
-    # Send a response back to the client indicating that the file was received and saved
-    response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully".encode()
-    conn.send(response)
-    
+            header += data
+
+        if not header:
+            # Client closed connection
+            break
+
+        # Process the header and get the filename and file size
+        lines = header.split(b'\r\n')
+        filename = lines[0].split(b' ')[1]
+        filesize = int(lines[1].split(b' ')[1])
+
+        # Receive the file data and save it to a file
+        with open(filename, "wb") as f:
+            bytes_received = 0
+            while bytes_received < filesize:
+                data = conn.recv(min(1024, filesize - bytes_received))
+                if not data:
+                    break
+                f.write(data)
+                bytes_received += len(data)
+
+        # Send a response back to the client indicating that the file was received and saved
+        response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully".encode()
+        conn.send(response)
+
     # Close the connection
     conn.close()
 
