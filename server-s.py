@@ -1,5 +1,4 @@
 #/usr/bin/env python3
-
 import sys
 import socket
 import signal
@@ -21,15 +20,20 @@ def processClientConnection(conn, addr):
             break
         header += data
     
-    # TODO: process the header and get the filename and file size
+    # Process the header and get the filename and file size
+    lines = header.split(b'\r\n')
+    filename = lines[0].split(b' ')[1]
+    filesize = int(lines[1].split(b' ')[1])
     
     # Receive the file data and save it to a file
     with open(filename, "wb") as f:
-        while True:
-            data = conn.recv(1024)
+        bytes_received = 0
+        while bytes_received < filesize:
+            data = conn.recv(min(1024, filesize - bytes_received))
             if not data:
                 break
             f.write(data)
+            bytes_received += len(data)
     
     # Close the connection
     conn.close()
@@ -41,6 +45,9 @@ def main():
         sys.exit(1)
     try:
         port = int(sys.argv[1])
+        if port < 0 or port > 65535:
+            sys.stderr.write("ERROR: Invalid port number\n")
+            sys.exit(1)
     except ValueError:
         sys.stderr.write("ERROR: Invalid port number\n")
         sys.exit(1)
