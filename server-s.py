@@ -4,12 +4,11 @@ import sys
 import socket
 import signal
 import threading
+import time
 
-def signalHandler(sig, frame):
-    global server_socket
-    #print("Exiting server...")
-    server_socket.close()
-    sys.exit(0)
+def signalHandler(signum, frame):
+    global not_stopped
+    not_stopped = False
 
 def processClientConnection(conn, addr):
     # Send the "accio" command to the client
@@ -46,7 +45,9 @@ def processClientConnection(conn, addr):
     conn.close()
 
 def main():
-    global server_socket
+    global not_stopped
+    not_stopped = True
+    
     # Parse command line arguments
     if len(sys.argv) != 2:
         sys.stderr.write("ERROR: Invalid number of arguments\n")
@@ -65,17 +66,22 @@ def main():
     server_socket.bind(('0.0.0.0', port))
     server_socket.listen(10)
     
-    # Set up a signal handler to handle SIGINT
+    # Set up signal handlers to handle SIGINT, SIGQUIT, and SIGTERM
     signal.signal(signal.SIGINT, signalHandler)
+    signal.signal(signal.SIGQUIT, signalHandler)
+    signal.signal(signal.SIGTERM, signalHandler)
     
     # Loop to accept incoming connections
-    while True:
+    while not_stopped:
         conn, addr = server_socket.accept()
         print(f"Connection received from {addr}")
         
         # Create a new thread to handle the connection and pass it to the processing function
         t = threading.Thread(target=processClientConnection, args=(conn, addr))
         t.start()
+        
+    # Close the server socket
+    server_socket.close()
 
 if __name__ == '__main__':
     main()
