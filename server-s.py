@@ -7,7 +7,7 @@ import threading
 
 def signalHandler(sig, frame):
     global server_socket
-    print("Exiting server...")
+    #print("Exiting server...")
     server_socket.close()
     sys.exit(0)
 
@@ -37,6 +37,10 @@ def processClientConnection(conn, addr):
                 break
             f.write(data)
             bytes_received += len(data)
+    
+    # Send a response back to the client indicating that the file was received and saved
+    response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully".encode()
+    conn.send(response)
     
     # Close the connection
     conn.close()
