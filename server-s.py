@@ -12,6 +12,8 @@ def signalHandler(sig, frame):
     sys.exit(0)
 
 def processClientConnection(conn, addr):
+    # Timeout after 60 seconds of inactivity
+    conn.settimeout(60)
     # Send the "accio" command to the client
     conn.send(b'accio\r\n')
 
@@ -50,7 +52,8 @@ def processClientConnection(conn, addr):
 
         # Send a response back to the client indicating that the file was received and saved
         response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully\r\n".encode()
-
+        conn.send(response)
+ 
     # Close the connection
     conn.close()
 
