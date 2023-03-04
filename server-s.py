@@ -12,9 +12,14 @@ def signalHandler(sig, frame):
     sys.exit(0)
 
 def processClientConnection(conn, addr):
+    conn.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # Timeout after 60 seconds of inactivity
-    conn.settimeout(60)
-    # Send the "accio" command to the client
+    try:
+        conn.settimeout(60)
+    except socket.error:
+        conn.send(b"Error occurred while setting timeout. Closing connection.\r\n")
+        conn.close()
+        return
     conn.send(b'accio\r\n')
 
     # Receive the file header
@@ -22,6 +27,8 @@ def processClientConnection(conn, addr):
     while True:
         data = conn.recv(1024)
         if not data:
+            conn.send(b"Invalid header received. Closing connection.\r\n")
+            conn.close()
             break
         header += data
         if b'\r\n\r\n' in header:
@@ -31,29 +38,28 @@ def processClientConnection(conn, addr):
             filesize = int(lines[1].split(b' ')[1])
             break
 
-        if not header:
-            # Client closed connection
-            break
+    # If header is empty or incomplete, send an error response and close the connection
+    if not header or b'\r\n\r\n' not in header:
+        conn.send(b"Invalid header received. Closing connection.\r\n")
+        conn.close()
+        return
 
-        # Process the header and get the filename and file size
-        lines = header.split(b'\r\n')
-        filename = lines[0].split(b' ')[1]
-        filesize = int(lines[1].split(b' ')[1])
+    # Receive the file data and save it to a file
+    with open(f"./{filename.decode()}", "wb") as f:
+        bytes_received = 0
+        while bytes_received < filesize:
+            data = conn.recv(min(1024, filesize - bytes_received))
+            if not data:
+                conn.send(f"File '{filename.decode()}' of size {bytes_received} bytes received partially. File transfer aborted.\r\n".encode())
+                conn.close()
+                return
+            f.write(data)
+            bytes_received += len(data)
 
-        # Receive the file data and save it to a file
-        with open(f"./{filename.decode()}", "wb") as f:
-            bytes_received = 0
-            while bytes_received < filesize:
-                data = conn.recv(min(1024, filesize - bytes_received))
-                if not data:
-                    break
-                f.write(data)
-                bytes_received += len(data)
+    # Send a response back to the client indicating that the file was received and saved
+    response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully\r\n".encode()
+    conn.send(response)
 
-        # Send a response back to the client indicating that the file was received and saved
-        response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully\r\n".encode()
-        conn.send(response)
- 
     # Close the connection
     conn.close()
 
