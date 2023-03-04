@@ -15,14 +15,15 @@ def processClientConnection(conn, addr):
     # Send the "accio" command to the client
     conn.send(b'accio\r\n')
 
+    # Receive the file header
+    header = b''
     while True:
-        # Receive the file header
-        header = b''
-        while b'\r\n\r\n' not in header:
-            data = conn.recv(1024)
-            if not data:
-                break
-            header += data
+        data = conn.recv(1024)
+        if not data:
+            break
+        header += data
+        if b'\r\n\r\n' in header:
+            break
 
         if not header:
             # Client closed connection
@@ -44,7 +45,7 @@ def processClientConnection(conn, addr):
                 bytes_received += len(data)
 
         # Send a response back to the client indicating that the file was received and saved
-        response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully".encode()
+        response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully\r\n".encode()
         conn.send(response)
 
     # Close the connection
