@@ -35,7 +35,7 @@ def processClientConnection(conn, addr):
         filesize = int(lines[1].split(b' ')[1])
 
         # Receive the file data and save it to a file
-        with open(filename, "wb") as f:
+        with open(f"./{filename.decode()}", "wb") as f:
             bytes_received = 0
             while bytes_received < filesize:
                 data = conn.recv(min(1024, filesize - bytes_received))
@@ -46,7 +46,6 @@ def processClientConnection(conn, addr):
 
         # Send a response back to the client indicating that the file was received and saved
         response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully\r\n".encode()
-        conn.send(response)
 
     # Close the connection
     conn.close()

@@ -38,3 +38,4 @@ GeeksforGeeks. (2022, November 18). With statement in Python. GeeksforGeeks. fro
 Python - read and write files. Python - Read and Write Files. (n.d.). from https://www.tutorialsteacher.com/python/python-read-write-file 
 
 part 2:
+1. Server is not receiving data 
