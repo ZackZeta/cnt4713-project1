@@ -50,7 +50,7 @@ def processClientConnection(conn, addr):
         while bytes_received < filesize:
             data = conn.recv(min(1024, filesize - bytes_received))
             if not data:
-                conn.send(f"File '{filename.decode()}' of size {bytes_received} bytes received partially. File transfer aborted.\r\n".encode())
+                conn.send(f"File '{filename.decode()}' of size {bytes_received} bytes transfer interrupted. File transfer aborted.\r\n".encode())
                 conn.close()
                 return
             f.write(data)
@@ -59,6 +59,7 @@ def processClientConnection(conn, addr):
     # Send a response back to the client indicating that the file was received and saved
     response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully\r\n".encode()
     conn.send(response)
+    conn.send(b"Accio File Transfer Complete!\r\n")
 
     # Close the connection
     conn.close()
