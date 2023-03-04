@@ -40,7 +40,11 @@ def processClientConnection(conn, addr):
                 conn.close()
                 return
             filename = filename_line[1]
-            filesize = int(lines[1].split(b' ')[1])
+            if b'filesize=' not in header:
+                filesize = 0 # or some other default value
+                conn.send(b"Warning: file size not specified in header. Using default file size.\r\n")
+else:
+    filesize = int(lines[1].split(b' ')[1])
 
     # If header is empty or incomplete, send an error response and close the connection
     if not header or b'filename=' not in header or b'filesize=' not in header:
