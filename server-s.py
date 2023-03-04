@@ -57,9 +57,10 @@ def processClientConnection(conn, addr):
             bytes_received += len(data)
 
     # Send a response back to the client indicating that the file was received and saved
-    response = f"File '{filename.decode()}' of size {filesize} bytes received and saved successfully\r\n".encode()
+    response = f"File {filename.decode()} of size {filesize} bytes received and saved successfully\r\nAccio File Transfer Complete!\r\n".encode()
     conn.send(response)
     conn.send(b"Accio File Transfer Complete!\r\n")
+
 
     # Close the connection
     conn.close()
