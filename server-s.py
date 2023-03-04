@@ -15,7 +15,7 @@ def processClientConnection(conn, addr):
     conn.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # Timeout after 60 seconds of inactivity
     try:
-        conn.settimeout(60)
+        conn.settimeout(10)
     except socket.error:
         conn.send(b"Error occurred while setting timeout. Closing connection.\r\n")
         conn.close()
@@ -39,7 +39,7 @@ def processClientConnection(conn, addr):
             break
 
     # If header is empty or incomplete, send an error response and close the connection
-    if not header or b'\r\n\r\n' not in header:
+    if not header or b'filename=' not in header or b'filesize=' not in header:
         conn.send(b"Invalid header received. Closing connection.\r\n")
         conn.close()
         return
