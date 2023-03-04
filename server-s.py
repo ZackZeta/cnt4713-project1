@@ -23,6 +23,10 @@ def processClientConnection(conn, addr):
             break
         header += data
         if b'\r\n\r\n' in header:
+            # Process the header and get the filename and file size
+            lines = header.split(b'\r\n')
+            filename = lines[0].split(b' ')[1]
+            filesize = int(lines[1].split(b' ')[1])
             break
 
         if not header:
