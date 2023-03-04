@@ -34,9 +34,13 @@ def processClientConnection(conn, addr):
         if b'\r\n\r\n' in header:
             # Process the header and get the filename and file size
             lines = header.split(b'\r\n')
-            filename = lines[0].split(b' ')[1]
+            filename_line = lines[0].split(b' ')
+            if len(filename_line) < 2 or filename_line[1] == b'':
+                conn.send(b"Invalid header received. Closing connection.\r\n")
+                conn.close()
+                return
+            filename = filename_line[1]
             filesize = int(lines[1].split(b' ')[1])
-            break
 
     # If header is empty or incomplete, send an error response and close the connection
     if not header or b'filename=' not in header or b'filesize=' not in header:
