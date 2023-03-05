@@ -70,6 +70,20 @@ def processClientConnection(conn, addr):
     conn.send(response)
     conn.send(b"Accio File Transfer Complete!\r\n")
 
+    # Loop to accept incoming connections
+    while True:
+        # Wait for the previous connection to finish before accepting a new one
+        try:
+            conn, addr = server_socket.accept()
+        except OSError:
+            # server_socket has been closed, exit the loop
+            break
+        print(f"Connection received from {addr}")
+        
+        # Create a new thread to handle the connection and pass it to the processing function
+        t = threading.Thread(target=processClientConnection, args=(conn, addr))
+        t.start()
+    
 
     # Close the connection
     conn.close()
@@ -98,14 +112,6 @@ def main():
     # Set up a signal handler to handle SIGINT
     signal.signal(signal.SIGINT, signalHandler)
     
-    # Loop to accept incoming connections
-    while True:
-        conn, addr = server_socket.accept()
-        print(f"Connection received from {addr}")
-        
-        # Create a new thread to handle the connection and pass it to the processing function
-        t = threading.Thread(target=processClientConnection, args=(conn, addr))
-        t.start()
 
 if __name__ == '__main__':
     main()
