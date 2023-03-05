@@ -46,6 +46,8 @@ def processClientConnection(conn, addr):
             else:
                 filesize = int(lines[1].split(b' ')[1])
 
+            break
+
     # If header is empty or incomplete, send an error response and close the connection
     if not header or b'filename=' not in header or b'filesize=' not in header:
         conn.send(b"Invalid header received. Closing connection.\r\n")
@@ -67,8 +69,6 @@ def processClientConnection(conn, addr):
     # Send a response back to the client indicating that the file was received and saved
     response = f"File {filename.decode()} of size {filesize} bytes received and saved successfully\r\nAccio File Transfer Complete!\r\n".encode()
     conn.send(response)
-    conn.send(b"Accio File Transfer Complete!\r\n")
-
 
     # Close the connection
     conn.close()
@@ -84,26 +84,8 @@ def main():
         if port < 0 or port > 65535:
             sys.stderr.write("ERROR: Invalid port number\n")
             sys.exit(1)
-    except ValueError:
-        sys.stderr.write("ERROR: Invalid port number\n")
-        sys.exit(1)
-    
-    # Set up a socket to listen for incoming connections
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', port))
-    server_socket.listen(10)
-    
-    # Set up a signal handler to handle SIGINT
-    signal.signal(signal.SIGINT, signalHandler)
-    
-    # Loop to accept incoming connections
-    while True:
-        conn, addr = server_socket.accept()
-        print(f"Connection received from {addr}")
-        
-        # Create a new thread to handle the connection and pass it to the processing function
-        t = threading.Thread(target=processClientConnection, args=(conn, addr))
-        t.start()
+    except ValueError
+
 
 if __name__ == '__main__':
     main()
