@@ -13,10 +13,9 @@ def signalHandler(sig, frame):
     sys.exit(0)
 
 def processClientConnection(conn, addr):
-    conn.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # Timeout after 60 seconds of inactivity
     try:
-        conn.settimeout(10)
+        conn.settimeout(60)
     except socket.error:
         conn.send(b"Error occurred while setting timeout. Closing connection.\r\n")
         conn.close()
@@ -30,22 +29,23 @@ def processClientConnection(conn, addr):
         if not data:
             conn.send(b"Invalid header received. Closing connection.\r\n")
             conn.close()
-            break
+            return
         header += data
         if b'\r\n\r\n' in header:
             # Process the header and get the filename and file size
             lines = header.split(b'\r\n')
             filename_line = lines[0].split(b' ')
-        if len(filename_line) < 2 or filename_line[1] == b'':
-            conn.send(b"Invalid header received. Closing connection.\r\n")
-            conn.close()
-            return
-        filename = filename_line[1]
-        if b'filesize=' not in header:
-            filesize = 0 # or some other default value
-            conn.send(b"Warning: file size not specified in header. Using default file size.\r\n")
-        else:
-            filesize = int(lines[1].split(b' ')[1])
+            if len(filename_line) < 2 or filename_line[1] == b'':
+                conn.send(b"Invalid header received. Closing connection.\r\n")
+                conn.close()
+                return
+            filename = filename_line[1]
+            if b'filesize=' not in header:
+                filesize = 0 # or some other default value
+                conn.send(b"Warning: file size not specified in header. Using default file size.\r\n")
+            else:
+                filesize = int(lines[1].split(b' ')[1])
+            break
 
     # If header is empty or incomplete, send an error response and close the connection
     if not header or b'filename=' not in header or b'filesize=' not in header:
@@ -68,22 +68,6 @@ def processClientConnection(conn, addr):
     # Send a response back to the client indicating that the file was received and saved
     response = f"File {filename.decode()} of size {filesize} bytes received and saved successfully\r\nAccio File Transfer Complete!\r\n".encode()
     conn.send(response)
-    conn.send(b"Accio File Transfer Complete!\r\n")
-
-    # Loop to accept incoming connections
-    while True:
-        # Wait for the previous connection to finish before accepting a new one
-        try:
-            conn, addr = server_socket.accept()
-        except OSError:
-            # server_socket has been closed, exit the loop
-            break
-        print(f"Connection received from {addr}")
-        
-        # Create a new thread to handle the connection and pass it to the processing function
-        t = threading.Thread(target=processClientConnection, args=(conn, addr))
-        t.start()
-    
 
     # Close the connection
     conn.close()
@@ -111,6 +95,23 @@ def main():
     
     # Set up a signal handler to handle SIGINT
     signal.signal(signal.SIGINT, signalHandler)
+    
+    # Loop to accept incoming connections
+    while True:
+        # Wait for a connection
+        try:
+            conn, addr = server_socket.accept()
+        except OSError:
+            # server_socket has been closed, exit the loop
+            break
+        print(f"Connection received from {addr}")
+        
+        # Create a new thread to handle the connection and pass it to the processing function
+        t = threading.Thread(target=processClientConnection, args=(conn, addr))
+        t.start()
+    
+    # Close the server socket
+    server_socket.close()
     
 
 if __name__ == '__main__':
