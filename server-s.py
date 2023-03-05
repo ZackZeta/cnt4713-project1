@@ -76,6 +76,7 @@ def processClientConnection(conn, addr):
 
 def main():
     global server_socket
+    executor = ThreadPoolExecutor(max_workers=20)
     # Parse command line arguments
     if len(sys.argv) != 2:
         sys.stderr.write("ERROR: Invalid number of arguments\n")
