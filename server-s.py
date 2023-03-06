@@ -72,6 +72,7 @@ def processClientConnection(conn, addr):
     # Close the connection
     conn.close()
 
+
 def main():
     global server_socket
     executor = ThreadPoolExecutor(max_workers=20)
