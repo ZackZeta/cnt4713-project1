@@ -39,3 +39,7 @@ Python - read and write files. Python - Read and Write Files. (n.d.). from https
 
 part 2:
 1. Server is not receiving data 
+2. cant figure out how to have server receiving multiple confections. 
+3. Sever cant connect to multiple so cant have 10 connections
+4. time out is not working as intended
+5. unable to figure out the rest of the tests without the other ones working
