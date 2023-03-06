@@ -24,28 +24,34 @@ def processClientConnection(conn, addr):
 
     # Receive the file header
     header = b''
-    while True:
-        data = conn.recv(1024)
-        if not data:
-            conn.send(b"Invalid header received. Closing connection.\r\n")
-            conn.close()
-            return
-        header += data
-        if b'\r\n\r\n' in header:
-            # Process the header and get the filename and file size
-            lines = header.split(b'\r\n')
-            filename_line = lines[0].split(b' ')
-            if len(filename_line) < 2 or filename_line[1] == b'':
+    try:
+        conn.settimeout(10)
+        while True:
+            data = conn.recv(1024)
+            if not data:
                 conn.send(b"Invalid header received. Closing connection.\r\n")
                 conn.close()
                 return
-            filename = filename_line[1]
-            if b'filesize=' not in header:
-                filesize = 0 # or some other default value
-                conn.send(b"Warning: file size not specified in header. Using default file size.\r\n")
-            else:
-                filesize = int(lines[1].split(b' ')[1])
-            break
+            header += data
+            if b'\r\n\r\n' in header:
+                # Process the header and get the filename and file size
+                lines = header.split(b'\r\n')
+                filename_line = lines[0].split(b' ')
+                if len(filename_line) < 2 or filename_line[1] == b'':
+                    conn.send(b"Invalid header received. Closing connection.\r\n")
+                    conn.close()
+                    return
+                filename = filename_line[1]
+                if b'filesize=' not in header:
+                    filesize = 0 # or some other default value
+                    conn.send(b"Warning: file size not specified in header. Using default file size.\r\n")
+                else:
+                    filesize = int(lines[1].split(b' ')[1])
+                break
+    except socket.timeout:
+        conn.send(b"Connection timed out due to no data. Closing connection.\r\n")
+        conn.close()
+        return
 
     # If header is empty or incomplete, send an error response and close the connection
     if not header or b'filename=' not in header or b'filesize=' not in header:
