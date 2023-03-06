@@ -1,36 +1,51 @@
-import sys
+#!/usr/bin/env python3
 
-"""
-#importing socket
 import socket
+import os
 
-print("server is running")
+# Constants
+BUFFER_SIZE = 4096
+SERVER_HOST = "0.0.0.0"
+SERVER_PORT = 8000
+FILE_PATH = "received_file.txt"
 
-#creating new socket using socket method
-#socket.AF_INET for the address and protocol family for IPv4
-#socket.SOCK_STREAM Stream socket type, provides dual directional communication
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-print(sock)
-sock.bind(("localhost", 12345))
-print(sock)
+# Create a socket object
+server_socket = socket.socket()
 
-print("test1")
+# Set socket options to reuse the address and enable TCP Keep-Alive
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 
-sock.listen(1)
-clientSocket, ClientAddress = sock.accept()
+# Bind the socket to a specific address and port
+server_socket.bind((SERVER_HOST, SERVER_PORT))
 
-print("test2")
+# Listen for incoming connections
+server_socket.listen(5)
+print(f"Listening on {SERVER_HOST}:{SERVER_PORT}")
 
-print("Accepted connection from", ClientAddress)
+# Accept a client connection
+client_socket, client_address = server_socket.accept()
+print(f"Accepted connection from {client_address[0]}:{client_address[1]}")
 
-print("test3")
-data = clientSocket.recv(1024)
-print(f"Received: {data.decode()}")
+# Receive the file size from the client
+file_size_bytes = client_socket.recv(BUFFER_SIZE)
+file_size = int(file_size_bytes.decode())
 
-print("test4")
+# Open a file for writing the received data
+with open(FILE_PATH, "wb") as f:
+    # Receive the file data in chunks and write them to the file
+    bytes_received = 0
+    while bytes_received < file_size:
+        chunk = client_socket.recv(BUFFER_SIZE)
+        if not chunk:
+            break
+        f.write(chunk)
+        bytes_received += len(chunk)
 
-clientSocket.close()
-sock.close()
-"""
+    print(f"Received {bytes_received} bytes")
 
+# Close the client socket and the server socket
+client_socket.close()
+server_socket.close()
+
+print(f"File received: {FILE_PATH}")
