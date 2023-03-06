@@ -13,6 +13,7 @@ def signalHandler(sig, frame):
     sys.exit(0)
 
 def processClientConnection(conn, addr):
+    conn.send(b'accio\r\n')
     # Timeout after 60 seconds of inactivity
     try:
         conn.settimeout(10)
@@ -20,7 +21,7 @@ def processClientConnection(conn, addr):
         conn.send(b"Error occurred while setting timeout. Closing connection.\r\n")
         conn.close()
         return
-    conn.send(b'accio\r\n')
+    
 
     # Receive the file header
     header = b''
