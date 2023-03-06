@@ -25,7 +25,7 @@ def processClientConnection(conn, addr):
     # Receive the file header
     header = b''
     try:
-        conn.settimeout(10)
+        conn.settimeout(60)
         while True:
             data = conn.recv(1024)
             if not data:
