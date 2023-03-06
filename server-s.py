@@ -13,14 +13,14 @@ def signalHandler(sig, frame):
     sys.exit(0)
 
 def processClientConnection(conn, addr):
-    # Timeout after 10 seconds of inactivity
+    # Timeout after 60 seconds of inactivity
     try:
         conn.settimeout(10)
     except socket.error:
         conn.send(b"Error occurred while setting timeout. Closing connection.\r\n")
         conn.close()
         return
-    
+    conn.send(b'accio\r\n')
 
     # Receive the file header
     header = b''
@@ -46,8 +46,7 @@ def processClientConnection(conn, addr):
             else:
                 filesize = int(lines[1].split(b' ')[1])
             break
-    conn.send(b'accio\r\n')
-           
+
     # If header is empty or incomplete, send an error response and close the connection
     if not header or b'filename=' not in header or b'filesize=' not in header:
         conn.send(b"Invalid header received. Closing connection.\r\n")
@@ -99,6 +98,7 @@ def main():
     signal.signal(signal.SIGINT, signalHandler)
     
     # Loop to accept incoming connections
+    connections = []
     while True:
         # Wait for a connection
         try:
@@ -108,13 +108,37 @@ def main():
             break
         print(f"Connection received from {addr}")
         
+        # Append the connection to a list of connections
+        connections.append((conn, addr))
+        
+        # If the number of connections in the list reaches 10, process them sequentially
+        if len(connections) == 10:
+            for conn, addr in connections:
+                # Create a new thread to handle the connection and pass it to the processing function
+                t = threading.Thread(target=processClientConnection, args=(conn, addr))
+                t.start()
+                
+            # Wait for all threads to complete before clearing the list of connections
+            for t in threading.enumerate():
+                if t is not threading.currentThread():
+                    t.join()
+                    
+            # Clear the list of connections
+            connections.clear()
+    
+    # If there are any connections remaining in the list, process them sequentially
+    for conn, addr in connections:
         # Create a new thread to handle the connection and pass it to the processing function
         t = threading.Thread(target=processClientConnection, args=(conn, addr))
         t.start()
+        
+    # Wait for all threads to complete before exiting
+    for t in threading.enumerate():
+        if t is not threading.currentThread():
+            t.join()
     
     # Close the server socket
     server_socket.close()
-    
 
 if __name__ == '__main__':
     main()
