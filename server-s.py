@@ -16,7 +16,7 @@ def processClientConnection(conn, addr):
     conn.send(b'accio\r\n')
     # Timeout after 60 seconds of inactivity
     try:
-        conn.settimeout(10)
+        conn.settimeout(20)
     except socket.error:
         conn.send(b"Error occurred while setting timeout. Closing connection.\r\n")
         conn.close()
@@ -26,7 +26,7 @@ def processClientConnection(conn, addr):
     # Receive the file header
     header = b''
     try:
-        conn.settimeout(60)
+        conn.settimeout(20)
         while True:
             data = conn.recv(1024)
             if not data:
@@ -99,7 +99,7 @@ def main():
     # Set up a socket to listen for incoming connections
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', port))
-    server_socket.listen(10)
+    server_socket.listen(20)
     
     # Set up a signal handler to handle SIGINT
     signal.signal(signal.SIGINT, signalHandler)
