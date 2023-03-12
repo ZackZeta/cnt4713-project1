@@ -16,12 +16,13 @@ def clientHandling(conn, addr, file_dir, file_count):
     conn.close()
 
 def main(port, file_dir):
-    if port < 1 or port > 65535:
-        print("Error: Invalid port number")
-        return
-
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(('0.0.0.0', port))
+        try:
+            s.bind(('0.0.0.0', port))
+        except OSError:
+            print(f"Error: Could not bind to port {port}")
+            sys.exit(1)
+        
         s.listen(10)
 
         file_count = 1
