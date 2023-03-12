@@ -2,6 +2,7 @@
 
 import sys
 import socket
+import os
 import signal
 import threading
 from concurrent.futures import ThreadPoolExecutor
@@ -17,12 +18,12 @@ def clientHandling(conn, addr, file_dir, file_count):
 def main(port, file_dir):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(('0.0.0.0', port))
-        s.listen()
+        s.listen(10)
 
         file_count = 1
         while True:
             conn, addr = s.accept()
-            t = threading.Thread(target=handle_client, args=(conn, addr, file_dir, file_count))
+            t = threading.Thread(target=clientHandling, args=(conn, addr, file_dir, file_count))
             t.start()
             file_count += 1
 
