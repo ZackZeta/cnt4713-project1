@@ -16,11 +16,15 @@ def clientHandling(conn, addr, file_dir, file_count):
     conn.close()
 
 def main(port, file_dir):
+    if port < 1 or port > 65535:
+        sys.stderr.write("ERROR: Invalid port number\n")
+        sys.exit(1)
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try:
             s.bind(('0.0.0.0', port))
         except OSError:
-            sys.stderr.write("ERROR: Invalid port number\n")
+            sys.stderr.write("ERROR: Port %d is already in use\n" % port)
             sys.exit(1)
         
         s.listen(10)
