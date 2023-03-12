@@ -20,7 +20,7 @@ def main(port, file_dir):
         try:
             s.bind(('0.0.0.0', port))
         except OSError:
-            print(f"Error: Could not bind to port {port}")
+            sys.stderr.write("ERROR: Invalid port number\n")
             sys.exit(1)
         
         s.listen(10)
