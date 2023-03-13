@@ -26,7 +26,6 @@ part 2:
 2.Cant get server to end gracefully 
 ## Acknowledgements 
 
-Part 1:
 Course Material was mainly following was used to expand and reinforced what was learned.
 
 freeCodeCamp.org. (2018). Learn Python - Full Course for Beginners [Tutorial]. YouTube. from https://www.youtube.com/watch?v=rfscVS0vtbw&amp;t=4793s&amp;ab_channel=freeCodeCamp.org.
@@ -43,3 +42,7 @@ part 2:
 3. Sever cant connect to multiple so cant have 10 connections
 4. time out is not working as intended
 5. unable to figure out the rest of the tests without the other ones working
+
+part 3:
+1. too many issues had to rebuild the program from scratch again to test each case.
+2. could 
