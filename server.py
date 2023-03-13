@@ -7,7 +7,7 @@ import time
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-def clientHandling(conn, addr, file_dir, file_count, file_name=None):
+def clientHandling(conn, addr, file_dir, file_count):
     conn.send(b'accio\r\n')
     # Create the file name based on the number of files in the folder
     file_name = os.path.join(file_dir, str(file_count+1) + ".file")
