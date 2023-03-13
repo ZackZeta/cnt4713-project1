@@ -8,6 +8,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 
 def clientHandling(conn, addr, file_dir, file_count):
+    conn.send(b'accio\r\n')
     with open(os.path.join(file_dir, str(file_count) + '.file'), 'wb') as f:
         data = conn.recv(1024)
         while data:
