@@ -7,7 +7,7 @@ import time
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-def clientHandling(conn, addr, file_dir, file_count):
+def clientHandling(conn, addr, file_dir, file_count, file_name=None):
     conn.send(b'accio\r\n')
     # Create the file name based on the number of files in the folder
     file_name = os.path.join(file_dir, str(file_count+1) + ".file")
@@ -35,7 +35,7 @@ def clientHandling(conn, addr, file_dir, file_count):
     file_count += 1
     return file_count
 
-def main(port, file_dir):
+def main(port, file_dir="defaultFile", default_file_name=None):
     if port < 1 or port > 65535:
         sys.stderr.write("ERROR: Invalid port number\n")
         sys.exit(1)
@@ -58,7 +58,10 @@ def main(port, file_dir):
                 conn, addr = s.accept()
                 with lock:
                     thread_count += 1
-                    executor.submit(clientHandling, conn, addr, file_dir, file_count)
+                    if default_file_name:
+                        executor.submit(clientHandling, conn, addr, file_dir, file_count, default_file_name)
+                    else:
+                        executor.submit(clientHandling, conn, addr, file_dir, file_count)
                     file_count += 1
 
 if __name__ == '__main__':
