@@ -48,15 +48,18 @@ def main(port, file_dir):
             sys.exit(1)
         
         s.listen(20)
+        print("Listening on {}:{}".format('0.0.0.0', port))
 
         file_count = 1
         thread_count = 0
+        lock = threading.Lock()
         with ThreadPoolExecutor(max_workers=10) as executor:
             while True:
                 conn, addr = s.accept()
-                thread_count += 1
-                executor.submit(clientHandling, conn, addr, file_dir, file_count)
-                file_count += 1
+                with lock:
+                    thread_count += 1
+                    executor.submit(clientHandling, conn, addr, file_dir, file_count)
+                    file_count += 1
 
 if __name__ == '__main__':
     import argparse
