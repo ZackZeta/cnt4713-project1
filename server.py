@@ -25,13 +25,13 @@ def clientHandling(conn, addr, file_dir, file_count):
 
 
 
-def main(port, file_dir, filename=None):
+def main(port, file_dir): # filename=None
     if port < 1 or port > 65535:
         sys.stderr.write("ERROR: Invalid port number\n")
         sys.exit(1)
 
-    if filename is None:
-        filename = "defaultFile"
+    # if filename is None:
+    #    filename = "defaultFile"
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try:
