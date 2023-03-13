@@ -7,11 +7,10 @@ import time
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-def clientHandling(conn, addr, file_dir, file_count, file_name=None):
+def clientHandling(conn, addr, file_dir, file_count):
     conn.send(b'accio\r\n')
-    # If no file name is given, use a default value based on the file count
-    if not file_name:
-        file_name = os.path.join(file_dir, str(file_count+1) + ".file")
+    # Create the file name based on the number of files in the folder
+    file_name = os.path.join(file_dir, str(file_count+1) + ".file")
 
     with open(file_name, "wb") as f:
         data = conn.recv(1024)
@@ -36,9 +35,6 @@ def clientHandling(conn, addr, file_dir, file_count, file_name=None):
     file_count += 1
     return file_count
 
-    # Increment the file count
-    file_count += 1
-    return file_count
 
 def main(port, file_dir, filename=None):
     if port < 1 or port > 65535:
@@ -46,7 +42,7 @@ def main(port, file_dir, filename=None):
         sys.exit(1)
 
     if filename is None:
-        filename = "None"
+        filename = "defaultFile"
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try:
