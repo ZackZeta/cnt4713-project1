@@ -3,7 +3,6 @@
 import sys
 import socket
 import os
-import signal
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
@@ -31,14 +30,15 @@ def main(port, file_dir):
         s.listen(10)
 
         file_count = 1
-        while True:
-            conn, addr = s.accept()
-            t = threading.Thread(target=clientHandling, args=(conn, addr, file_dir, file_count))
-            t.start()
-            file_count += 1
+        thread_count = 0
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            while True:
+                conn, addr = s.accept()
+                thread_count += 1
+                executor.submit(clientHandling, conn, addr, file_dir, file_count)
+                file_count += 1
 
 if __name__ == '__main__':
-    
     import argparse
     parser = argparse.ArgumentParser(description='Accio Server')
     parser.add_argument('port', type=int, help='Port number to listen on')
