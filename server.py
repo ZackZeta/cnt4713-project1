@@ -8,12 +8,19 @@ from concurrent.futures import ThreadPoolExecutor
 
 def clientHandling(conn, addr, file_dir, file_count):
     conn.send(b'accio\r\n')
-    with open(os.path.join(file_dir, str(file_count) + '.file'), 'wb') as f:
+    # Create the file name based on the number of files in the folder
+    file_name = os.path.join(file_dir, str(file_count+1) + ".file")
+
+    with open(file_name, "wb") as f:
+        # Receive data from the client and write it to the file
         data = conn.recv(1024)
         while data:
             f.write(data)
             data = conn.recv(1024)
-    conn.close()
+
+    # Increment the file count
+    file_count += 1
+    return file_count
 
 def main(port, file_dir):
     if port < 1 or port > 65535:
@@ -27,7 +34,7 @@ def main(port, file_dir):
             sys.stderr.write("ERROR: Port %d is already in use\n" % port)
             sys.exit(1)
         
-        s.listen(10)
+        s.listen(20)
 
         file_count = 1
         thread_count = 0
