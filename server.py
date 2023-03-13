@@ -21,16 +21,6 @@ def main(port, file_dir):
         sys.stderr.write("ERROR: Invalid port number\n")
         sys.exit(1)
 
-    # Set up signal handlers to exit gracefully
-    exit_requested = False
-    def handle_signal(sig, frame):
-        nonlocal exit_requested
-        exit_requested = True
-    signal.signal(signal.SIGQUIT, handle_signal)
-    signal.signal(signal.SIGTERM, handle_signal)
-    signal.signal(signal.SIGINT, handle_signal)
-
-    # Start the server
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try:
             s.bind(('0.0.0.0', port))
@@ -41,14 +31,11 @@ def main(port, file_dir):
         s.listen(10)
 
         file_count = 1
-        while not exit_requested:
+        while True:
             conn, addr = s.accept()
             t = threading.Thread(target=clientHandling, args=(conn, addr, file_dir, file_count))
             t.start()
             file_count += 1
-
-    # Server is exiting gracefully, so exit with code zero
-    sys.exit(0)
 
 if __name__ == '__main__':
     
