@@ -3,6 +3,7 @@
 import sys
 import socket
 import os
+import time
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
@@ -12,11 +13,23 @@ def clientHandling(conn, addr, file_dir, file_count):
     file_name = os.path.join(file_dir, str(file_count+1) + ".file")
 
     with open(file_name, "wb") as f:
-        # Receive data from the client and write it to the file
         data = conn.recv(1024)
+        # Set the initial time value to the current time
+        start_time = time.monotonic()
         while data:
             f.write(data)
+            # Update the time value each time new data is received
+            start_time = time.monotonic()
             data = conn.recv(1024)
+            # Check if no new data has been received for more than 10 seconds
+            if time.monotonic() - start_time > 10:
+                # Close the connection and delete the partially received file
+                conn.close()
+                os.remove(file_name)
+                # Write an error message to the file
+                with open(file_name, "wb") as error_file:
+                    error_file.write(b"ERROR: Connection timed out after 10 seconds")
+                return file_count
 
     # Increment the file count
     file_count += 1
