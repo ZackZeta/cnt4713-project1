@@ -21,6 +21,8 @@ def clientHandling(conn, addr, file_dir, file_count):
 def signal_handler(signum, frame):
     global not_stopped
     not_stopped = False
+    print("Interrupted current connection processing, waiting for next connection...")
+
 
 def main(port, file_dir):
     global not_stopped

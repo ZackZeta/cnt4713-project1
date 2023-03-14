@@ -45,4 +45,6 @@ part 2:
 
 part 3:
 1. too many issues had to rebuild the program from scratch again to test each case.
-2. could 
+2. could not get the server to receive data
+3. server cannot accept more connections due to the above issue tried dispite it.
+
