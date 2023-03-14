@@ -7,7 +7,6 @@ import signal
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-# Define a global flag variable
 not_stopped = True
 
 def clientHandling(conn, addr, file_dir, file_count):
@@ -51,10 +50,13 @@ def main(port, file_dir):
             t.start()
             file_count += 1
 
-    # Add a loop to wait for threads to finish before exiting
-    for t in threading.enumerate():
-        if t != threading.current_thread():
-            t.join()
+        # Add a loop to wait for threads to finish before exiting
+        for t in threading.enumerate():
+            if t != threading.current_thread():
+                t.join()
+
+    # Wait for a signal to be received
+    signal.pause()
 
 if __name__ == '__main__':
     
